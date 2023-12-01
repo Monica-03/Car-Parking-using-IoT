@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .parking-slots {
+            display: flex;
+            justify-content: space-around;
+            width: 300px; /* Adjust the width as needed */
+        }
+
+        .parking-slot {
+            flex: 1;
+            height: 50px;
+            margin: 10px;
+            text-align: center;
+            line-height: 50px;
+            cursor: pointer;
+        }
+
+        .booked {
+            background-color: red;
+            color: white;
+        }
+
+        .free {
+            background-color: green;
+            color: white;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #f0f0f0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .popup h2 {
+            margin-bottom: 10px;
+        }
+
+        .popup button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            background-color: #4a85fa;
+            color: #000000;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+        }
+
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+    <title>Parking Slots Booking</title>
+</head>
+<body>
+
+<h1>Parking Slots Booking</h1>
+
+<div class="parking-slots">
+    <div id="slotA" class="parking-slot free" onclick="showPopup('A')">Slot A</div>
+    <div id="slotB" class="parking-slot free" onclick="showPopup('B')">Slot B</div>
+    <div id="slotC" class="parking-slot free" onclick="showPopup('C')">Slot C</div>
+</div>
+
+<div id="popupA" class="popup">
+    <h2>Booking Slot A</h2>
+    <button onclick="bookSlot('A')">Book</button>
+    <button onclick="hidePopup('A')" class="cancel">Cancel</button>
+</div>
+<div id="popupB" class="popup">
+    <h2>Booking Slot B</h2>
+    <button onclick="bookSlot('B')">Book</button>
+    <button onclick="hidePopup('B')" class="cancel">Cancel</button>
+</div>
+<div id="popupC" class="popup">
+    <h2>Booking Slot C</h2>
+    <button onclick="bookSlot('C')">Book</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button onclick="hidePopup('C')" class="cancel">Cancel</button>
+</div>
+
+<div id="errorPopup" class="popup error-message">
+    <h2>Error</h2>
+    <p id="errorMessage"></p>
+    <button onclick="hideErrorPopup()">OK</button>
+</div>
+
+<div id="overlay" class="popup-overlay" onclick="hidePopups()"></div>
+
+<script>
+    function showPopup(slot) {
+        var parkingSlot = document.getElementById('slot' + slot);
+        if (parkingSlot.classList.contains('free')) {
+            var popup = document.getElementById('popup' + slot);
+            var overlay = document.getElementById('overlay');
+            popup.style.display = 'block';
+            overlay.style.display = 'block';
+            document.getElementById('errorMessage').innerHTML = '';
+        } else {
+            document.getElementById('errorMessage').innerHTML = 'This slot is already booked. Please choose another slot.';
+            showPopupError();
+        }
+    }
+
+    function showPopupError() {
+        var errorPopup = document.getElementById('errorPopup');
+        var overlay = document.getElementById('overlay');
+        errorPopup.style.display = 'block';
+        overlay.style.display = 'block';
+    }
+
+    function hidePopup(slot) {
+        var popup = document.getElementById('popup' + slot);
+        var overlay = document.getElementById('overlay');
+        popup.style.display = 'none';
+        overlay.style.display = 'none';
+    }
+
+    function hideErrorPopup() {
+        var errorPopup = document.getElementById('errorPopup');
+        var overlay = document.getElementById('overlay');
+        errorPopup.style.display = 'none';
+        overlay.style.display = 'none';
+    }
+
+    function hidePopups() {
+        var popups = document.querySelectorAll('.popup');
+        var overlay = document.getElementById('overlay');
+        popups.forEach(function (popup) {
+            popup.style.display = 'none';
+        });
+        overlay.style.display = 'none';
+        document.getElementById('errorMessage').innerHTML = '';
+    }
+
+    function bookSlot(slot) {
+        var parkingSlot = document.getElementById('slot' + slot);
+        parkingSlot.classList.remove('free');
+        parkingSlot.classList.add('booked');
+        hidePopup(slot);
+    }
+</script>
+
+</body>
+</html>
